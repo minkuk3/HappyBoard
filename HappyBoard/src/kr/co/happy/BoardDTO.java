@@ -8,8 +8,9 @@ public class BoardDTO {
 	private int seq;
 	private String btitle;
 	private String bcontent;
-	private String brefdate;
+	private String bregdate;
 	private String pw;
+	
 	public int getBid() {
 		return bid;
 	}
@@ -40,11 +41,11 @@ public class BoardDTO {
 	public void setBcontent(String bcontent) {
 		this.bcontent = bcontent;
 	}
-	public String getBrefdate() {
-		return brefdate;
+	public String getBregdate() {
+		return bregdate;
 	}
-	public void setBrefdate(String brefdate) {
-		this.brefdate = brefdate;
+	public void setBregdate(String bregdate) {
+		this.bregdate = bregdate;
 	}
 	public String getPw() {
 		return pw;

@@ -16,11 +16,13 @@ public class BoardDAO {
 		return instance;
 	}
 	
-	private BoardDAO() { }	// 기본생성자
+	private BoardDAO() { }
+	
+	private final int LIST_CNT = 20;
 	
 	public ArrayList<BoardDTO> getBoardList(int btype, int page){
 		
-		ArrayList<BoardDTO> result = new ArrayList<BoardDTO>();
+		ArrayList<BoardDTO> datas = new ArrayList<BoardDTO>();
 		
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -29,7 +31,10 @@ public class BoardDAO {
 		try {
 			conn = DBConnector.getConn();
 			
-			String query = " SELECT * from( " + 
+			int start = (page - 1) * LIST_CNT + 1;
+			int end = page * LIST_CNT;
+			
+			String sql = " SELECT * from( " + 
 					" SELECT" + 
 					" h.*, " + 
 					" ROW_NUMBER() OVER (order BY seq desc) as rnum " + 
@@ -37,8 +42,25 @@ public class BoardDAO {
 					" where h.BTYPE = ? " + 
 					" ) where rnum between ? and ? ";
 			
-			conn = ps.getConnection();
+			conn = DBConnector.getConn();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, btype);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			
 			rs = ps.executeQuery();
+			while (rs.next()) {
+				BoardDTO dto = new BoardDTO();
+				dto.setBid(rs.getInt("bid"));
+				dto.setSeq(rs.getInt("seq"));
+				dto.setBtitle(rs.getString("btitle"));
+				dto.setBregdate(rs.getString("bregdate"));
+				
+				datas.add(dto);
+				
+				/*System.out.println("dto");//확인
+*/			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,7 +68,7 @@ public class BoardDAO {
 			DBConnector.close(conn, ps, rs);
 		}
 			
-		return result;
+		return datas;
 		
 	}
 	

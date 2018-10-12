@@ -19,7 +19,8 @@ public class DBConnector {
 			
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection(url, id, pw);
-			System.out.println("연결 확인");
+			
+			/*System.out.println("연결 확인");*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();

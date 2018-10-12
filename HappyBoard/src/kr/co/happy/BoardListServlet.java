@@ -1,8 +1,7 @@
 package kr.co.happy;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,14 +19,28 @@ public class BoardListServlet extends HttpServlet {
     }
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//DB에서 자료 가져오기
+		String btype = request.getParameter("btype");
+		String page = request.getParameter("page");
 		
+		//http://localhost:8077/HappyBoard/boardList ? null일때 아무것도 없을때 넣어준다 
+		int intBtype = 0;
+		if(btype != null) {
+			intBtype = Integer.parseInt(btype);
+		}
+		
+		int intPage = 1;
+		if(page != null) {			
+			intPage = Integer.parseInt(page);
+		}
+		//DB에서 자료 가져오기
+		BoardDAO dao = BoardDAO.getInstance();
+		ArrayList<BoardDTO> list = dao.getBoardList(intBtype, intPage);
+		
+		request.setAttribute("date", list);
 		String target = "boardList";
 		request.setAttribute("target", target);
 		RequestDispatcher rd = request.getRequestDispatcher("template.jsp");
 		rd.forward(request, response);
-		
-		
 		
 	}
 
